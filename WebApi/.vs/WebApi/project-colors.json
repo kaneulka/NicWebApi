@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "670330a3-bf16-4d67-b65c-815c5b379e71": {
+      "ProjectGuid": "670330a3-bf16-4d67-b65c-815c5b379e71",
+      "DisplayName": "WebApi",
+      "ColorIndex": 0
+    },
+    "40662110-29e5-425a-bc38-cd11cc6ebbf6": {
+      "ProjectGuid": "40662110-29e5-425a-bc38-cd11cc6ebbf6",
+      "DisplayName": "Data",
+      "ColorIndex": 1
+    },
+    "5e2e3efb-f74e-4aa7-98ed-e5f2cca269c4": {
+      "ProjectGuid": "5e2e3efb-f74e-4aa7-98ed-e5f2cca269c4",
+      "DisplayName": "Repository",
+      "ColorIndex": 2
+    },
+    "986cd555-c8f2-47ed-9766-c28982af488a": {
+      "ProjectGuid": "986cd555-c8f2-47ed-9766-c28982af488a",
+      "DisplayName": "Service",
+      "ColorIndex": 3
+    },
+    "15d101f9-4906-4cff-b422-a13d0ff8cd80": {
+      "ProjectGuid": "15d101f9-4906-4cff-b422-a13d0ff8cd80",
+      "DisplayName": "ViewModel",
+      "ColorIndex": 4
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Прочие файлы",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 5
+}

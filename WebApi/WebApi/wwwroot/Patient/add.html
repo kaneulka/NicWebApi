@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Список пользователей</h2>
+    <form name="form">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="firstName">Фамилия :</label>
+            <input class="form-control" name="firstName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="secondName">Имя:</label>
+            <input class="form-control" name="secondName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="patronymic">Отчество:</label>
+            <input class="form-control" name="patronymic" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="address">Адрес:</label>
+            <input class="form-control" name="address" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="birthday">День рождения:</label>
+            <input class="form-control" name="birthday" type="date" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="gender">Пол:</label>
+            <input class="form-control" name="gender" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="siteNamesSplit">Участки:</label>
+            <input class="form-control" name="siteNamesSplit" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Сохранить</button>
+            <a id="reset" class="btn btn-primary">Сбросить</a>
+        </div>
+    </form>
+    <script>
+
+        // Добавление пользователя
+        async function Create(firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit) {
+            const data = JSON.stringify({
+                firstName: firstName,
+                secondName: secondName,
+                patronymic: patronymic,
+                address: address,
+                birthday: birthday,
+                gender: gender,
+                siteNamesSplit: siteNamesSplit
+            });
+            console.log(data);
+            const response = await fetch("/api/Patient", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: data 
+            });
+            //if (response.ok === true) {
+            //    const user = await response.json();
+            //    reset();
+            //    document.querySelector("tbody").append(row(user));
+            //}
+        }
+
+        // сброс формы
+        function reset() {
+            const form = document.forms["form"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+
+        // отправка формы
+        document.forms["form"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["form"];
+            const id = form.elements["id"].value;
+            const firstName = form.elements["firstName"].value;
+            const secondName = form.elements["secondName"].value;
+            const patronymic = form.elements["patronymic"].value;
+            const address = form.elements["address"].value;
+            const birthday = form.elements["birthday"].value;
+            const gender = form.elements["gender"].value;
+            const siteNamesSplit = form.elements["siteNamesSplit"].value;
+            if (id == 0)
+                Create(firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit);
+            else
+                EditUser(id, name, age);
+        });
+    </script>
+
+</body>
+</html>

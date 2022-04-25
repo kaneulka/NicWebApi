@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h2>Список пользователей</h2>
+    <form name="form">
+        <div class="form-group col-md-5">
+            <label for="doctorName">Имя:</label>
+            <input class="form-control" name="doctorName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="cabinetNumber">кабинет:</label>
+            <input class="form-control" name="cabinetNumber" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="siteName">участок:</label>
+            <input class="form-control" name="siteName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="specializationName">специализация:</label>
+            <input class="form-control" name="specializationName" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Сохранить</button>
+            <a id="reset" class="btn btn-primary">Сбросить</a>
+        </div>
+    </form>
+    <script>
+        
+        // Добавление пользователя
+        async function Create(doctorName, cabinetNumber, siteName, specializationName) {
+ 
+            const response = await fetch("/api/Doctor", {
+                method: "POST",
+                contentType: "application/json",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    doctorName: doctorName,
+                    cabinetNumber: cabinetNumber,
+                    siteName: siteName,
+                    specializationName: specializationName
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tbody").append(row(user));
+            }
+        }
+         
+        // сброс формы
+        function reset() {
+            const form = document.forms["form"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+
+        // отправка формы
+        document.forms["form"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["form"];
+            const id = form.elements["id"].value;
+            const doctorName = form.elements["doctorName"].value;
+            const cabinetNumber = form.elements["cabinetNumber"].value;
+            const siteName = form.elements["siteName"].value;
+            const specializationName = form.elements["specializationName"].value;
+            if (id == 0)
+                Create(doctorName, cabinetNumber, siteName, specializationName);
+            else
+                EditUser(id, name, age);
+        });
+    </script>
+
+</body>
+</html>

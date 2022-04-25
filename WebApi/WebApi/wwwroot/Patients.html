@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Список пациентов</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Пациенты</h2>
+    <form name="form">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="firstName">Фамилия :</label>
+            <input class="form-control" name="firstName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="secondName">Имя:</label>
+            <input class="form-control" name="secondName" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="patronymic">Отчество:</label>
+            <input class="form-control" name="patronymic" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="address">Адрес:</label>
+            <input class="form-control" name="address" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="birthday">День рождения:</label>
+            <input class="form-control" name="birthday" type="date" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="gender">Пол:</label>
+            <input class="form-control" name="gender" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="siteNamesSplit">Участки:</label>
+            <input class="form-control" name="siteNamesSplit" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Сохранить</button>
+            <a id="reset" class="btn btn-primary">Сбросить</a>
+        </div>
+    </form>
+    <table class="table table-condensed table-striped  col-md-6">
+        <thead><tr><th>Id</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Адрес</th><th>День рождения</th><th>Имя</th>Пол<th><th>Участки</th></th></tr></thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        async function GetPatients() {
+            const response = await fetch("/api/Patient", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const patients = await response.json();
+                let rows = document.querySelector("tbody");
+                patients.forEach(patient => {
+                    rows.append(row(patient));
+                });
+            }
+        }
+
+        async function GetPatient(id) {
+            const response = await fetch("/api/Patient/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const patient = await response.json();
+                const form = document.forms["form"];
+                form.elements["id"].value = patient.id;
+                form.elements["firstName"].value = patient.firstName;
+                form.elements["secondName"].value = patient.secondName;
+                form.elements["patronymic"].value = patient.patronymic;
+                form.elements["address"].value = patient.address;
+                form.elements["birthday"].value = patient.birthday;
+                form.elements["gender"].value = patient.gender;
+                form.elements["siteNamesSplit"].value = patient.siteNamesSplit;
+            }
+        }
+
+        async function CreatePatient(firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit) {
+            const data = JSON.stringify({
+                firstName: firstName,
+                secondName: secondName,
+                patronymic: patronymic,
+                address: address,
+                birthday: birthday,
+                gender: gender,
+                siteNamesSplit: siteNamesSplit
+            });
+            const response = await fetch("/api/Patient", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: data
+            });
+            if (response.ok === true) {
+                const patient = await response.json();
+                reset();
+                document.querySelector("tbody").append(row(patient));
+            }
+        }
+
+        async function EditPatient(id, firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit) {
+            const data = JSON.stringify({
+                id: id,
+                firstName: firstName,
+                secondName: secondName,
+                patronymic: patronymic,
+                address: address,
+                birthday: birthday,
+                gender: gender,
+                siteNamesSplit: siteNamesSplit
+            });
+            const response = await fetch("api/Patient", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: data
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tr[data-rowid='" + patient.id + "']").replaceWith(row(patient));
+            }
+        }
+        // Удаление пользователя
+        async function DeletePatient(id) {
+            const response = await fetch("/api/Patient/" + id, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const patient = await response.json();
+                document.querySelector("tr[data-rowid='" + patient.id + "']").remove();
+            }
+        }
+
+        // сброс формы
+        function reset() {
+            const form = document.forms["form"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+        // создание строки для таблицы
+        function row(patient) {
+
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", patient.id);
+
+            const idTd = document.createElement("td");
+            idTd.append(patient.id);
+            tr.append(idTd);
+
+            const firstNameTd = document.createElement("td");
+            firstNameTd.append(patient.firstName);
+            tr.append(firstNameTd);
+
+            const secondNameTd = document.createElement("td");
+            secondNameTd.append(patient.secondName);
+            tr.append(secondNameTd);
+
+            const patronymicTd = document.createElement("td");
+            patronymicTd.append(patient.patronymic);
+            tr.append(patronymicTd);
+
+            const addressTd = document.createElement("td");
+            addressTd.append(patient.address);
+            tr.append(addressTd);
+
+            const birthdayTd = document.createElement("td");
+            birthdayTd.append(patient.birthday);
+            tr.append(birthdayTd);
+
+            const genderTd = document.createElement("td");
+            genderTd.append(patient.gender);
+            tr.append(genderTd);
+
+            const siteNamesSplitTd = document.createElement("td");
+            siteNamesSplitTd.append(patient.siteNamesSplit);
+            tr.append(siteNamesSplitTd);
+
+            const linksTd = document.createElement("td");
+
+            const editLink = document.createElement("a");
+            editLink.setAttribute("data-id", patient.id);
+            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.append("Изменить");
+            editLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                GetPatient(patient.id);
+            });
+            linksTd.append(editLink);
+
+            const removeLink = document.createElement("a");
+            removeLink.setAttribute("data-id", patient.id);
+            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.append("Удалить");
+            removeLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                DeleteUser(patient.id);
+            });
+
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+
+            return tr;
+        }
+
+        document.getElementById("reset").click(function (e) {
+
+            e.preventDefault();
+            reset();
+        })
+
+        document.forms["form"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["form"];
+            const id = form.elements["id"].value;
+            const firstName = form.elements["firstName"].value;
+            const secondName = form.elements["secondName"].value;
+            const patronymic = form.elements["patronymic"].value;
+            const address = form.elements["address"].value;
+            const birthday = form.elements["birthday"].value;
+            const gender = form.elements["gender"].value;
+            const siteNamesSplit = form.elements["siteNamesSplit"].value;
+            if (id == 0)
+                CreatePatient(firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit);
+            else
+                EditPatient(id, firstName, secondName, patronymic, address, birthday, gender, siteNamesSplit);
+        });
+
+        GetPatients();
+
+    </script>
+</body>
+</html>
